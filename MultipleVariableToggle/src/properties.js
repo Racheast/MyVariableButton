@@ -8,7 +8,7 @@ define(["qlik"], function(qlik) {
        items: {
           variable: {
              component: "items",
-             label: "Variable",
+             label: "Toggles",
              items: {
                 
                 variableToggle: {
