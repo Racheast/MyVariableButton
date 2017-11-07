@@ -1,0 +1,8 @@
+{
+  "type" :           "visualization",
+  "icon" :           "filterpane",
+  "name" :           "MultipleVariableToggle",
+  "description" :    "Toggle the values of multiple variable",
+  "author" :         "Barry Harmsen, Bitmetric B.V. & Alexander Eigner, GMM",
+  "version" :        "1.0"
+}
