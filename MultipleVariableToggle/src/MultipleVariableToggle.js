@@ -40,24 +40,17 @@ define(["text!./MultipleVariableToggle.ng.html",
 
          $scope.toggleVar = function($index) {
             // Set the value of the variable to the toggled option
-            console.log("Toggling..!");
 			$scope.toggleIndex = $index;
             //$scope.layout.variableValue = $scope.layout.variableToggle[$scope.toggleIndex].value;
             //app.variable.setStringValue($scope.layout.variableName, $scope.layout.variableValue);
-			for(var i=0;i<$scope.layout.variableToggle.length;i++){
-				console.log("Toggle: name: " + $scope.layout.variableToggle[i].toggleName);
-			}
+			
 			var array = $scope.layout.variableToggle[$scope.toggleIndex].variableArray;
 			for(var i=0; i<array.length;i++){
-				console.log("toggleVar: vName: " + array[i].variableName + ", vValue: " + array[i].value); 
 				app.variable.setStringValue(array[i].variableName,array[i].value);
 			}
          }
 		 
-		 $scope.showArrays = function() {
-			console.log("bvt2: showArrays: variableToggle: " + JSON.stringify($scope.layout.variableToggle));
-			console.log("bvt2: showArrays: variableArray: " + JSON.stringify($scope.layout.variableArray));
-		 };
+		 
       }
    }
 });
