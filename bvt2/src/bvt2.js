@@ -40,9 +40,15 @@ define(["text!./MVB.ng.html",
 
          $scope.toggleVar = function($index) {
             // Set the value of the variable to the toggled option
-            $scope.toggleIndex = $index;
-            $scope.layout.variableValue = $scope.layout.variableToggle[$scope.toggleIndex].value;
-            app.variable.setStringValue($scope.layout.variableName, $scope.layout.variableValue);
+            console.log("Toggling..!");
+			$scope.toggleIndex = $index;
+            //$scope.layout.variableValue = $scope.layout.variableToggle[$scope.toggleIndex].value;
+            //app.variable.setStringValue($scope.layout.variableName, $scope.layout.variableValue);
+			var array = $scope.layout.variableToggle[$scope.toggleIndex].variableArray;
+			for(var i=0; i<array.length;i++){
+				console.log("toggleVar: vName: " + array[i].variableName + ", vValue: " + array[i].value); 
+				app.variable.setStringValue(array[i].variableName,array[i].value);
+			}
          }
 		 
 		 $scope.showArrays = function() {

@@ -1,3 +1,10 @@
 <div qv-extension>
-<button qva-activate="showArrays()">Set Vars</button>
+  <ul class="qv-object-bitmetric-toggle">
+    <li ng-repeat="toggle in layout.variableToggle"
+        class="qv-object-bitmetric-toggle"
+        ng-class="{'qv-object-bitmetric-toggle-selected': $index == toggleIndex}">
+      <a class="qv-object-bitmetric-toggle"
+         href qva-activate="toggleVar($index)">{{toggle.label}}</a>
+    </li>
+  </ul>
 </div>
