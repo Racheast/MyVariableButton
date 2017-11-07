@@ -1,0 +1,9 @@
+{
+  "type" :           "visualization",
+  "icon" :           "filterpane",
+  "name" :           "bvt2",
+  "preview":         "bitmetric-logo.png",
+  "description" :    "Toggle the values of a variable",
+  "author" :         "Barry Harmsen, Bitmetric B.V.",
+  "version" :        "1.0"
+}
