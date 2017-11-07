@@ -1,0 +1,40 @@
+.qv-object-bitmetric-toggle {
+   display: table;
+   table-layout: fixed;
+   list-style: none;
+   margin: 0;
+   padding: 0;
+   width: 100%;
+   overflow: hidden;
+}
+
+.qv-object-bitmetric-toggle li {
+   display: table-cell;
+   *float: left; /* improve IE7 */
+   text-align: center;
+   height: 30px;
+   line-height: 30px;
+   font-size: 12px;
+   padding-left: 0px;
+   border-left: 1px solid #ddd;
+}
+
+.qv-object-bitmetric-toggle li:first-child {
+   padding-left: 0px;
+   border: 0px;
+}
+
+.qv-object-bitmetric-toggle a {
+    width: 100%;
+    display: block;
+    height: 100%;
+    line-height: 30px;
+    text-decoration: none;
+    color: #595959;
+
+}
+
+.qv-object-bitmetric-toggle-selected a {
+   background-color: #52CC52;
+   color: #FFFFFF;
+}
