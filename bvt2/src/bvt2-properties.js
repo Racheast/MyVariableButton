@@ -15,17 +15,23 @@ define(["qlik"], function(qlik) {
                    type: "array",
                    label: "Toggles",
                    ref: "variableToggle",
-                   itemTitleRef: "label",
+                   itemTitleRef: "toggleName",
                    allowAdd: true,
                    allowRemove: true,
                    allowMove: true,
                    addTranslation: "Add toggle",
                    items: {
+					 toggleName: {
+							 type: "string",
+							 ref: "toggleName",
+							 label: "Toggle Name",
+							 expression: "optional"
+						  },  
                      variableArray: {
 					   type: "array",
 					   label: "Variable array",
 					   ref: "variableArray",
-					   itemTitleRef: "label",
+					   itemTitleRef: "variableName",
 					   allowAdd: true,
 					   allowRemove: true,
 					   allowMove: true,

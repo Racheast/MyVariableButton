@@ -44,6 +44,9 @@ define(["text!./MVB.ng.html",
 			$scope.toggleIndex = $index;
             //$scope.layout.variableValue = $scope.layout.variableToggle[$scope.toggleIndex].value;
             //app.variable.setStringValue($scope.layout.variableName, $scope.layout.variableValue);
+			for(var i=0;i<$scope.layout.variableToggle.length;i++){
+				console.log("Toggle: name: " + $scope.layout.variableToggle[i].toggleName);
+			}
 			var array = $scope.layout.variableToggle[$scope.toggleIndex].variableArray;
 			for(var i=0; i<array.length;i++){
 				console.log("toggleVar: vName: " + array[i].variableName + ", vValue: " + array[i].value); 
