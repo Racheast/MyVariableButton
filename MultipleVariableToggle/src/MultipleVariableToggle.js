@@ -7,8 +7,8 @@ define(["text!./MultipleVariableToggle.ng.html",
 
    return {
       initialProperties: {
-         variableName: "",
-         variableValue: "",
+         //variableName: "",
+        //variableValue: "",
          variableToggle: []
       },
       template: templateHTML,
