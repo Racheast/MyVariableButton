@@ -1,0 +1,50 @@
+.qv-object-qlik-sense-slider #top {
+  width: 95%;
+  text-align: right;
+}
+
+.qv-object-qlik-sense-slider #labels {
+  width: 95%;
+}
+
+.qv-object-qlik-sense-slider #labels #min-val {
+  float: left;
+}
+
+.qv-object-qlik-sense-slider #labels #max-val {
+  float: right;
+}
+
+.qv-object-qlik-sense-slider .button {
+	display: inline-block;
+	width: 80px;
+	height: 30px;
+	text-align: center;
+	text-decoration: none;
+	line-height: 30px;
+	outline: none;
+}
+.qv-object-qlik-sense-slider .button::before,
+.qv-object-qlik-sense-slider .button::after {
+	position: absolute;
+	z-index: -1;
+	display: block;
+	content: '';
+}
+.qv-object-qlik-sense-slider .button,
+.qv-object-qlik-sense-slider .button::before,
+.qv-object-qlik-sense-slider .button::after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-transition: all .3s;
+	transition: all .3s;
+}
+
+.qv-object-qlik-sense-slider .button {
+	background-color: #87CEEB;
+	color: #fff;
+}
+.qv-object-qlik-sense-slider .button:hover {
+	background-color: #59b1eb;
+}
