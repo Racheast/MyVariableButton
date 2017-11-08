@@ -19,7 +19,8 @@ define(["text!./MultipleVariableToggle.ng.html",
          $scope.toggleIndex = -1;   // Set default toggle to unselected
 
          // Get current value of the variable and set the correct toggle to active
-         if ($scope.layout.variableValue != '') {
+         /*
+		 if ($scope.layout.variableValue != '') {
              $scope.layout.variableToggle.forEach(function(varItem, index){
                // If toggle value matches current variable value then set to toggled
                if (varItem.value == $scope.layout.variableValue) {
@@ -37,6 +38,7 @@ define(["text!./MultipleVariableToggle.ng.html",
              });
            });
          };
+		 */
 
          $scope.toggleVar = function($index) {
             // Set the value of the variable to the toggled option
