@@ -28,19 +28,16 @@ define( [
 			html += '<div id="qs-slider-ext-' + id + '">';
 			html += 	'<div id ="labels"><span id="min-val">' + layout.props.minValue + '</span><span id="max-val">' + layout.props.maxValue + '</span></div>';
 			html += 	'<input id="qs-slider-' + id + '" type="range" min="' + layout.props.minValue + '" max="' + layout.props.maxValue + '" step="' + nrOfSteps + '" style="width:95%" value="' + layout.props.selectedValue + '" list="tickmarks"/>';
-			html += 	'<input type="text" id="textInput" value="">'
 			html += '</div>';			
 			html += printDatalist(layout.props.minValue, layout.props.maxValue, layout.props.nrOfPartitions);
 			
 			$element.html(html);
 			
-			updateTextField(layout.props.selectedValue);
 
 			// Triggered by the slider.
 			$('#qs-slider-' + id ).on('change', function() {
 				layout.props.selectedValue = $(this).val();
 				qlik.currApp().variable.setStringValue(layout.props.variable, layout.props.selectedValue);
-				updateTextField(layout.props.selectedValue);
 			})
 			
 			//needed for export
@@ -50,11 +47,6 @@ define( [
 
 } );
 
-
-
-function updateTextField(val){
-	 document.getElementById('textInput').value=val; 
-}
 
 function printDatalist(minValue, maxValue, nrOfPartitions){
 	var datalist="<datalist id=tickmarks>";
