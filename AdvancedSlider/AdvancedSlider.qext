@@ -1,0 +1,15 @@
+{
+	"name": "AdvancedSlider",
+	"description": "Variation of Masaki Hamano's Qlik Sense Slider (https://github.com/mhamano/Qlik-Sense-Slider/)",
+	"type": "visualization",
+	"version": "1.0.0",
+	"icon": "extension",
+	"author": "Masaki Hamano, Alexander Eigner",
+	"homepage": "",
+	"keywords": "qlik-sense, visualization, slider",
+	"license": "",
+	"repository": "",
+	"dependencies": {
+		"qlik-sense": ">=3.0.x"
+	}
+}
