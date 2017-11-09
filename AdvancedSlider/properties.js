@@ -11,14 +11,6 @@ define(["qlik"], function(qlik) {
                         type: "items",
                         label: "Slider Settings",
                         items: {
-                            /*
-							  varlable: {
-								ref: "props.variable",
-								label: "Variable",
-								type: "string",
-								defaultValue: "Variable1"
-							  },
-							  */
                             variable: {
                                 label: "Variable",
                                 type: "string",
@@ -34,6 +26,11 @@ define(["qlik"], function(qlik) {
                                                 label: item.qName
                                             });
                                         });
+										varList.sort(function(a, b){
+											if(a.value < b.value) return -1;
+											if(a.value > b.value) return 1;
+											return 0;
+										})
                                         return varList;
                                     });
                                 },

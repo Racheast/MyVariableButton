@@ -2,9 +2,10 @@ define( [
 		"qlik",
 		"./properties",
 		"./initialproperties",
-		'text!./style.css'
+		'text!./style.css',
+		"jquery"
 	],
-	function ( qlik, props, initprops, cssContent ) {
+	function ( qlik, props, initprops, cssContent, $) {
 		$("<style>").html(cssContent).appendTo("head");
 
 	return {
@@ -16,13 +17,13 @@ define( [
 			exportData : false
 		},
 		paint: function ($element, layout) {
-			var html = "", me = this, id = layout.qInfo.qId, nrOfSteps = 0.01;
+			var html = "", id = layout.qInfo.qId, nrOfSteps = 0.01;
 			
 			if(layout.props.intOrDec == false){
 				nrOfSteps = 1;
 			}
 			
-			qlik.currApp(me).variable.setContent(layout.props.variable, layout.props.selectedValue);
+			qlik.currApp().variable.setStringValue(layout.props.variable, layout.props.selectedValue);
 			
 			html += '<div id="qs-slider-ext-' + id + '">';
 			html += 	'<div id ="labels"><span id="min-val">' + layout.props.minValue + '</span><span id="max-val">' + layout.props.maxValue + '</span></div>';
@@ -38,17 +39,18 @@ define( [
 			// Triggered by the slider.
 			$('#qs-slider-' + id ).on('change', function() {
 				layout.props.selectedValue = $(this).val();
-				qlik.currApp(me).variable.setContent(layout.props.variable, layout.props.selectedValue);
+				qlik.currApp().variable.setStringValue(layout.props.variable, layout.props.selectedValue);
 				updateTextField(layout.props.selectedValue);
 			})
 			
-
 			//needed for export
 			return qlik.Promise.resolve();
 		}
 	};
 
 } );
+
+
 
 function updateTextField(val){
 	 document.getElementById('textInput').value=val; 
