@@ -1,6 +1,6 @@
 {
 	"name": "AdvancedRangeSlider",
-	"description": "",
+	"description": "Range slider for the selection of two values (e.g. lower bound and upper bound)",
 	"type": "visualization",
 	"version": "1.0.0",
 	"icon": "extension",
