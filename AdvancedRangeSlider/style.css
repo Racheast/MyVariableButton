@@ -1,0 +1,52 @@
+.qv-object-AdvancedRangeSlider #top {
+  width: 95%;
+  text-align: right;
+}
+
+.qv-object-AdvancedRangeSlider #labels {
+  width: 95%;
+}
+
+.qv-object-AdvancedRangeSlider #labels #min-val {
+  float: left;
+}
+
+.qv-object-AdvancedRangeSlider #labels #max-val {
+  float: right;
+}
+
+.qv-object-AdvancedRangeSlider .button {
+	display: inline-block;
+	width: 80px;
+	height: 30px;
+	text-align: center;
+	text-decoration: none;
+	line-height: 30px;
+	outline: none;
+}
+.qv-object-AdvancedRangeSlider .button::before,
+.qv-object-AdvancedRangeSlider .button::after {
+	position: absolute;
+	z-index: -1;
+	display: block;
+	content: '';
+}
+.qv-object-AdvancedRangeSlider .button,
+.qv-object-AdvancedRangeSlider .button::before,
+.qv-object-AdvancedRangeSlider .button::after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-transition: all .3s;
+	transition: all .3s;
+}
+
+.qv-object-AdvancedRangeSlider .button {
+	background-color: #87CEEB;
+	color: #fff;
+}
+.qv-object-AdvancedRangeSlider .button:hover {
+	background-color: #59b1eb;
+}
+
+
