@@ -37,7 +37,7 @@ define(["qlik"], function(qlik) {
 					   allowMove: true,
 					   addTranslation: "Add variable",
 					   items: {
-						  variableName: {
+						  /*variableName: {  //dropdown maybe causes very long loading times of variables if there's plenty of them
 						   label: "Variable",
 						   type: "string",
 						   component: "dropdown",
@@ -57,6 +57,12 @@ define(["qlik"], function(qlik) {
 						   },
 						   expression: "always",
 						   ref: "variableName"
+						}*/
+						variableName: {
+							type: "string",
+							ref: "variableName",
+							label: "variable name",
+							expression: "optional"
 						},
 						value: {
 							 type: "string",
