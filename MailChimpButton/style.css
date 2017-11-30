@@ -1,0 +1,61 @@
+.qv-object-AdvancedSlider #top {
+  width: 95%;
+  text-align: right;
+}
+
+.qv-object-AdvancedSlider #labels {
+  width: 95%;
+}
+
+.qv-object-AdvancedSlider #labels #min-val {
+  float: left;
+}
+
+.qv-object-AdvancedSlider #labels #max-val {
+  float: right;
+}
+
+.qv-object-AdvancedSlider .button {
+	display: inline-block;
+	width: 80px;
+	height: 30px;
+	text-align: center;
+	text-decoration: none;
+	line-height: 30px;
+	outline: none;
+}
+.qv-object-AdvancedSlider .button::before,
+.qv-object-AdvancedSlider .button::after {
+	position: absolute;
+	z-index: -1;
+	display: block;
+	content: '';
+}
+.qv-object-AdvancedSlider .button,
+.qv-object-AdvancedSlider .button::before,
+.qv-object-AdvancedSlider .button::after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-transition: all .3s;
+	transition: all .3s;
+}
+
+.qv-object-AdvancedSlider .button {
+	background-color: #87CEEB;
+	color: #fff;
+}
+.qv-object-AdvancedSlider .button:hover {
+	background-color: #59b1eb;
+}
+
+/*input[type=range]::-ms-fill-lower {
+    background: orange;
+    border-radius: 10px;
+}
+
+input[type=range]::-ms-fill-upper {
+    background: orange;
+    border-radius: 10px;
+}*/
+
