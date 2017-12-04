@@ -106,6 +106,7 @@ define( [
 				});
 			}
 			
+			// !!! MAKE SURE THAT THE EMAIL-ADDRESSES BELONG TO USERS THAT EXIST IN MAILCHIMP !!!
 			function addOrRemoveMembersFromSegment(membersToAddAndRemove, segmentID){
 				console.log("Calling addOrRemoveMembersFromSegment...");
 				$.ajax({
@@ -118,7 +119,7 @@ define( [
 					},
 					dataType: 'json',
 					success: function(data) {
-						console.log("Success: " + data);
+						console.log("Success: " + JSON.stringify(data));
 					}
 				});
 			}
