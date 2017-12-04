@@ -12,8 +12,10 @@ define( [
 				  qDimensions : [],  
 				  qMeasures : [],  
 				  qInitialDataFetch : [{  
-					   qWidth : 8,  
-					   qHeight : 50  
+					   qTop: 0, 
+					   qWidth: 20, 
+					   qLeft: 0, 
+					   qHeight: 455
 				  }]  
 			 }  
 		}, 
@@ -24,67 +26,102 @@ define( [
 			exportData : false
 		},
 		paint: function ($element, layout) {
-			
 			var html = '<div><button type="submit" id="b1" >do something</button></div>';
 			
-			var segment = JSON.stringify({
+			var segment = {
 				"name" : "myJSsegment",
 				"static_segment" : []
-			});				
+			};				
 			
 			var members_to_add = ["mmmuster@mustermail.ed","ssspiderman@spinne.ed"];
 			var members_to_remove = [];
 			
+			//USEFUL !!!
+			//https://community.qlik.com/blogs/qlikviewdesignblog/2016/10/14/getting-all-data-cells-from-appcreatecube
 			
-			
-			qlik.currApp().getObject('dzJ').then(function(model){
-				var table = qlik.table(model);  
-				/*works only, if I want to download it manually...
-				table.exportData({format: "OOXML", download: true});
-				*/
-				
-				/*!!!
-				Gain access to email-addresses over the subnode-architecture.
-				Make sure to receive all rows (not only e.g.50)
-				*/
-				
-				console.log("model.layout: " + JSON.stringify(model.layout.qHyperCube.qPivotDataPages[0].qLeft[9]));
-				console.log("table.rowCount: " + table.rowCount);
-				console.log("table.rows: " + table.rows);
- 
-			
-				
-			});
-			
-			$element.html(html);
+			$element.html(html);  //works only in paint()
 			
 			$("#b1").click(function(){
 				console.log("trying post...");
-				//base_url,vMCKey,vApiPrefix,vMCList
-				//https://us13.api.mailchimp.com/3.0/,e0efd872132071dee9ba6c0eb6067e8d,us13,8af007a903
-				/*
-				$.post('http://localhost:51961/createSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903',segment,function(serverResponse){
-					console.log("server response: " + serverResponse);
+				
+				//NICE-TO-HAVE: AppObject-picker for dynamically selecting the table (like in SetObjectState)			
+				qlik.currApp().getObject('dzJ').then(function(model){
+					var totalheight = model.layout.qHyperCube.qSize.qcy;  
+					var pageheight = 500;
+					var nrOfPages = Math.ceil(totalheight/pageheight);					
+					var tasks = [];
+					var emailaddresses = [];
+					
+					for(var i=0; i < nrOfPages; i++){
+						console.log("Creating page ...");
+						var page = {
+							qTop: i * pageheight, 
+							qWidth: 20, 
+							qLeft: 0, 
+							qHeight: pageheight
+						};
+						tasks.push(model.getHyperCubePivotData('/qHyperCubeDef', [page]));
+					}
+					
+					Promise.all(tasks).then((pages) => {
+						
+						for(var i=0; i < pages.length; i++){
+							var page = pages[i];
+							for(var j=0; j < page[0].qLeft.length; j++){
+								var emailaddress = page[0].qLeft[j].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qText;
+								if(emailaddress != "-"){
+									emailaddresses.push(emailaddress);
+								}
+							}
+						}
+						
+						return emailaddresses;
+					}).then((emailaddresses) => {  //send to MailChimpRestProxy
+						console.log("Starting ajax call... (only createSegment atm)");
+						createSegment(segment, emailaddresses);
+					});
 				});
-				*/
-				/*
-				console.log(segment);
+				
+			});
+			
+			function createSegment(segment, emailaddresses){
+				console.log("Calling createSegment...");
 				$.ajax({
 					url: 'http://localhost:8887/createSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903',
 					type: 'post',
-					data: segment,
+					data: JSON.stringify(segment),
 					headers: {
 						'Accept': 'application/json',
 						'Content-Type': 'application/json'
 					},
 					dataType: 'json',
-					success: function (data) {
-						console.log("success: " + data);
+					success: function(data) {
+						var segmentID = data.id;
+						var membersToAddAndRemove = {
+							"members_to_add" : emailaddresses,
+							"members_to_remove" : []
+						}
+						addOrRemoveMembersFromSegment(membersToAddAndRemove, segmentID);
 					}
 				});
-				*/
-				
-			});
+			}
+			
+			function addOrRemoveMembersFromSegment(membersToAddAndRemove, segmentID){
+				console.log("Calling addOrRemoveMembersFromSegment...");
+				$.ajax({
+					url: 'http://localhost:8887/addOrRemoveMembersFromSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903&segment_id='+segmentID,
+					type: 'post',
+					data: JSON.stringify(membersToAddAndRemove),
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					dataType: 'json',
+					success: function(data) {
+						console.log("Success: " + data);
+					}
+				});
+			}
 			
 			//create segment
 			//POST https://us13.api.mailchimp.com/3.0/lists/8af007a903/segments
