@@ -216,13 +216,7 @@ define( [
 					},
 					dataType: 'json',
 					success: function(data) {
-						console.log("addOrRemoveMembersFromSegment: Success: " + JSON.stringify(data));
-						console.log("data keys: " + Object.keys(data));
-						//alert(data.total_added + " members have been added to the segment.");
-						
-						/* response header issues:
-						https://stackoverflow.com/questions/23521839/failed-to-load-resource-neterr-content-length-mismatch
-						*/
+						alert(data.total_added + " members have been added to the segment.");
 					}
 				});
 			}
