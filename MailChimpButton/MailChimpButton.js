@@ -181,6 +181,7 @@ define( [
 				console.log("Calling createSegment...");
 				$.ajax({
 					url: 'http://localhost:8887/createSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903',
+					//url: 'http://zwirn:8887/createSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903',
 					type: 'post',
 					data: JSON.stringify(segment),
 					headers: {
@@ -189,6 +190,8 @@ define( [
 					},
 					dataType: 'json',
 					success: function(data) {
+						console.log("createSegment: SUCCESS: data: " + JSON.stringify(data));
+						alert("Segment with the name " + data.name + " has been created.");
 						var segmentID = data.id;
 						var membersToAddAndRemove = {
 							"members_to_add" : emailaddresses,
@@ -204,6 +207,7 @@ define( [
 				console.log("Calling addOrRemoveMembersFromSegment...");
 				$.ajax({
 					url: 'http://localhost:8887/addOrRemoveMembersFromSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903&segment_id='+segmentID,
+					//url: 'http://zwirn:8887/addOrRemoveMembersFromSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903&segment_id='+segmentID,
 					type: 'post',
 					data: JSON.stringify(membersToAddAndRemove),
 					headers: {
@@ -212,7 +216,13 @@ define( [
 					},
 					dataType: 'json',
 					success: function(data) {
-						console.log("Success: " + JSON.stringify(data));
+						console.log("addOrRemoveMembersFromSegment: Success: " + JSON.stringify(data));
+						console.log("data keys: " + Object.keys(data));
+						//alert(data.total_added + " members have been added to the segment.");
+						
+						/* response header issues:
+						https://stackoverflow.com/questions/23521839/failed-to-load-resource-neterr-content-length-mismatch
+						*/
 					}
 				});
 			}
