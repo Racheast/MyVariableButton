@@ -7,8 +7,6 @@ define(["text!./MultipleVariableToggle.ng.html",
 
    return {
       initialProperties: {
-         //variableName: "",
-        //variableValue: "",
          variableToggle: []
       },
       template: templateHTML,
@@ -16,37 +14,18 @@ define(["text!./MultipleVariableToggle.ng.html",
       controller: function($scope) {
 
          var app = qlik.currApp();
-         $scope.toggleIndex = -1;   // Set default toggle to unselected
-
-         // Get current value of the variable and set the correct toggle to active
-         /*
-		 if ($scope.layout.variableValue != '') {
-             $scope.layout.variableToggle.forEach(function(varItem, index){
-               // If toggle value matches current variable value then set to toggled
-               if (varItem.value == $scope.layout.variableValue) {
-                 $scope.toggleIndex = index;
-               }
-             });
-         } else {
-           // If no current variable value (in JS), retrieve value from the variable in the application
-           app.variable.getContent($scope.layout.variableName).then(function(curVarValue){
-             $scope.layout.variableToggle.forEach(function(varItem, index){
-               // If toggle value matches current variable value then set to toggled
-               if (varItem.value == curVarValue.qContent.qString) {
-                 $scope.toggleIndex = index;
-               }
-             });
-           });
-         };
-		 */
-
-         $scope.toggleVar = function($index) {
-            // Set the value of the variable to the toggled option
-			$scope.toggleIndex = $index;
-            //$scope.layout.variableValue = $scope.layout.variableToggle[$scope.toggleIndex].value;
-            //app.variable.setStringValue($scope.layout.variableName, $scope.layout.variableValue);
-			
-			var array = $scope.layout.variableToggle[$scope.toggleIndex].variableArray;
+		 console.log("$scope.layout.toggledIndex= " + $scope.layout.toggledIndex);
+		 
+		 if($scope.layout.toggledIndex > -1){  //A toggle has been selected
+			var array = $scope.layout.variableToggle[$scope.layout.toggledIndex].variableArray;
+			for(var i=0; i<array.length;i++){
+				app.variable.setStringValue(array[i].variableName,array[i].value);
+			}
+		 }
+		 
+         $scope.toggleVar = function($index) {  //Function started when a toggle with an $index is clicked in the html template
+            $scope.layout.toggledIndex = $index;
+			var array = $scope.layout.variableToggle[$scope.layout.toggledIndex].variableArray;
 			for(var i=0; i<array.length;i++){
 				app.variable.setStringValue(array[i].variableName,array[i].value);
 			}

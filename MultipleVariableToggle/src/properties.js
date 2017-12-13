@@ -73,7 +73,13 @@ define(["qlik"], function(qlik) {
 					   }
 					}
                    }
-                }
+                },
+				toggledIndex:{
+					type: "number",
+					ref: "toggledIndex",
+					label: "toggledIndex",
+					defaultValue: "-1"
+				}
              }
           },
           settings: {

@@ -2,7 +2,7 @@
   <ul class="qv-object-bitmetric-toggle">
     <li ng-repeat="toggle in layout.variableToggle"
         class="qv-object-bitmetric-toggle"
-        ng-class="{'qv-object-bitmetric-toggle-selected': $index == toggleIndex}">
+        ng-class="{'qv-object-bitmetric-toggle-selected': $index == layout.toggledIndex}">
       <a class="qv-object-bitmetric-toggle"
          href qva-activate="toggleVar($index)">{{toggle.toggleName}}</a>
     </li>
