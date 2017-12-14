@@ -14,9 +14,8 @@ define(["text!./MultipleVariableToggle.ng.html",
       controller: function($scope) {
 
          var app = qlik.currApp();
-		 console.log("$scope.layout.toggledIndex= " + $scope.layout.toggledIndex);
 		 
-		 if($scope.layout.toggledIndex > -1){  //A toggle has been selected
+		 if($scope.layout.toggledIndex > -1){  // A toggle has been selected
 			var array = $scope.layout.variableToggle[$scope.layout.toggledIndex].variableArray;
 			for(var i=0; i<array.length;i++){
 				app.variable.setStringValue(array[i].variableName,array[i].value);
