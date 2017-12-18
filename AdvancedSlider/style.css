@@ -49,11 +49,11 @@
 	background-color: #59b1eb;
 }
 
-/*input[type=range]::-ms-fill-lower {
-    background: orange;
+input[type=range]::-ms-fill-lower {
+    background: transparent;
     border-radius: 10px;
 }
-
+/*
 input[type=range]::-ms-fill-upper {
     background: orange;
     border-radius: 10px;

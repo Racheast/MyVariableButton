@@ -57,7 +57,7 @@ function printDatalist(minValue, maxValue, nrOfPartitions){
 		for(var i=0; i<(nrOfPartitions-1); i++){
 				tickValue = parseFloat(tickValue) + intervall;
 				tickValue = Math.round(tickValue*100) / 100;
-				datalist += "<option>" + tickValue + "</option>";
+				datalist += '<option>' + tickValue + '</option>';
 		}
 	}
 	datalist += "</datalist>";
