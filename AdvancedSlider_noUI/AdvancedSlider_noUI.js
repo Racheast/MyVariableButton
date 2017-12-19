@@ -3,8 +3,8 @@ define( [
 		"./properties",
 		"./initialproperties",
 		"jquery",
-		'text!./css/nouislider.css',
-		'./js/nouislider',
+		'text!./css/nouislider.min.css',
+		'./js/nouislider.min',
 		'./js/wnumb-1.1.0/wNumb'
 	],
 	function ( qlik, props, initprops, $,noUISliderCSS,noUiSlider,wNumb) {

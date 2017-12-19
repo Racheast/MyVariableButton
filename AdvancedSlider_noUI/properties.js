@@ -49,6 +49,12 @@ define(["qlik"], function(qlik) {
                                 type: "integer",
                                 defaultValue: "100"
                             },
+							steps: {
+                                ref: "props.steps",
+                                label: "Slider steps",
+                                type: "integer",
+                                defaultValue: "1"
+                            },
                             pipsDensity: {
                                 ref: "props.pipsDensity",
                                 label: "density of the slider marks",
@@ -61,12 +67,6 @@ define(["qlik"], function(qlik) {
                                 type: "integer",
                                 defaultValue: "5"
 							},
-                            steps: {
-                                ref: "props.steps",
-                                label: "Slider steps",
-                                type: "integer",
-                                defaultValue: "1"
-                            },
                             selectedValue: {
                                 ref: "props.selectedValue",
                                 label: "Selected Value",
