@@ -20,7 +20,7 @@ define( [
 		paint: function ($element, layout) {
 			//set the variable to the last known selected value
 			qlik.currApp().variable.setStringValue(layout.props.variable, layout.props.selectedValue);
-			var html='<br/><br/><br/><div id="slider" style="float:none;"></div>';
+			var html='<br/><br/><br/><div id="slider" style="width:90%;margin-left:5%;"></div>';
 			$element.html(html);
 			
 			var slider = document.getElementById('slider');
