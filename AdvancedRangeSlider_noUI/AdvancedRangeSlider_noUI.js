@@ -22,7 +22,7 @@ define( [
 			qlik.currApp().variable.setStringValue(layout.props.variableLowerBound, layout.props.selectedValueLowerBound + "");
 			qlik.currApp().variable.setStringValue(layout.props.variableUpperBound, layout.props.selectedValueUpperBound + "");
 			
-			var html='<br/><br/><br/><div id="slider" style="float:none;"></div>';
+			var html='<br/><br/><br/><div id="slider" style="width:90%;margin-left:5%;"></div>';
 			$element.html(html);
 			var slider = document.getElementById('slider');
 			
