@@ -18,12 +18,27 @@ define( [
 			exportData : false
 		},
 		paint: function ($element, layout) {
+			var html="";
+			var slider_id = "advancedSlider_1";
+			var hidden_field = document.getElementById("hidden_id_advancedSlider");
+			
+			//generate the slider_id for this particular slider
+			if(hidden_field == undefined){
+				html = '<input type="hidden" id="hidden_id_advancedSlider" value=advancedSlider_1></input><br/>'
+			}else{
+				var nr=hidden_field.value.substring(hidden_field.value.lastIndexOf("_") + 1);
+				nr++;
+				slider_id = "advancedSlider_" + nr;
+				document.getElementById("hidden_id_advancedSlider").value=slider_id;
+			}
+			
 			//set the variable to the last known selected value
 			qlik.currApp().variable.setStringValue(layout.props.variable, layout.props.selectedValue);
-			var html='<br/><br/><br/><div id="slider" style="width:90%;margin-left:5%;"></div>';
+
+			html = html + '<br/><br/><br/><div id="'+slider_id+'" style="width:90%;margin-left:5%;"></div>';
 			$element.html(html);
 			
-			var slider = document.getElementById('slider');
+			var slider = document.getElementById(slider_id);
 			
 			noUiSlider.create(slider, {
 				start: [layout.props.selectedValue],
