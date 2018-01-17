@@ -1,0 +1,15 @@
+{
+	"name": "SAMButton",
+	"description": "SAMButton",
+	"type": "visualization",
+	"version": "1.0.0",
+	"icon": "extension",
+	"author": "Alexander Eigner",
+	"homepage": "",
+	"keywords": "qlik-sense, visualization, SAMSOAPProxy",
+	"license": "",
+	"repository": "",
+	"dependencies": {
+		"qlik-sense": ">=3.0.x"
+	}
+}
