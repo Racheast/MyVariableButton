@@ -76,14 +76,50 @@ define( [
 				var targetCode = $("#targetCode").val();
 				
 				if(targetCode.length != 0){	
-					var campaignTarget = {
-						"code" : targetCode,
-						"internalName" : targetCode, //TODO: textfield for entering an internal name
-						"contactNumbers" : ["12","23"]
-					};
-					createOrUpdateTarget(campaignTarget);
+					
+					//NICE-TO-HAVE: AppObject-picker for dynamically selecting the table (like in SetObjectState)			
+					qlik.currApp().getObject('dzJ').then(function(model){
+						var totalheight = model.layout.qHyperCube.qSize.qcy;  
+						var pageheight = 500;
+						var nrOfPages = Math.ceil(totalheight/pageheight);					
+						var tasks = [];
+						var emailaddresses = [];
+						
+						for(var i=0; i < nrOfPages; i++){
+							console.log("Creating page ...");
+							var page = {
+								qTop: i * pageheight, 
+								qWidth: 20, 
+								qLeft: 0, 
+								qHeight: pageheight
+							};
+							tasks.push(model.getHyperCubePivotData('/qHyperCubeDef', [page]));
+						}
+						
+						Promise.all(tasks).then((pages) => {
+							
+							for(var i=0; i < pages.length; i++){
+								var page = pages[i];
+								for(var j=0; j < page[0].qLeft.length; j++){
+									var email_address = page[0].qLeft[j].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qText;
+									if(email_address != "-"){
+										emailaddresses.push(email_address);
+									}
+								}
+							}
+							
+							return emailaddresses;
+						}).then((emailaddresses) => {  //send to SAMSOAPProxy
+							var campaignTarget = {
+								"code" : targetCode,
+								"internalName" : targetCode, //TODO: textfield for entering an internal name
+								"contactNumbers" : emailaddresses
+							};
+							createOrUpdateTarget(campaignTarget);
+						});
+					});
 				}else{
-					alert("Please enter a segment name.");
+					alert("Please enter a target code.");
 				}
 			});
 			
@@ -110,8 +146,19 @@ define( [
 						alert(getMessage(layout.props.languageChoice,"success"));
 					},
 					error: function(data) {
-						console.log("Data.statustext: " + data.statusText);
-						alert(data.statusText);
+						console.log("Data.statustext: " + JSON.stringify(data));
+						//prepare error output message
+						var errors="";
+						if(data.responseJSON.validationErrors != null){
+							for(var i = 0; i < data.responseJSON.validationErrors.length; i++){
+								var validationError = data.responseJSON.validationErrors[i];
+								errors += validationError.field + ": " + validationError.defaultMessage + "\n";
+							}
+						}
+						if(data.responseJSON.samError != null){
+							errors+=data.responseJSON.samError.statusDetail + "\n";
+						}
+						alert("Error:\n" + errors);
 					}
 				});
 			}
