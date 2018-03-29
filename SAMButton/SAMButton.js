@@ -29,8 +29,9 @@ define( [
 			var html = '<div><form><input type="text" id="targetCode" placeholder="Targetcode" style="width:40%;" required/></div>';
 			html += '<div><input type="text" id="internalName" placeholder="Internal name" style="width:40%;" required/></div>';
 			html += '<div><button type="submit" id="createTarget" style="width:40%">' + getMessage(layout.props.languageChoice, "buttonText") + '</button></div>';
+			html += '<p id="targetCodeError" style="color:red;"></p>';
+			html += '<p id="internalNameError" style="color:red;"></p></form>';
 			//html += '<br/>';
-			html += '<p id="errorMessage" style="color:red;"></p></form>';
 			//html += '<div id="dialog" title="Basic dialog"><p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the "x" icon.</p></div>';
 			//html += '<div><button type="submit" id="addUpdateUsers" >Add/update users to a list</button></div>';
 			//html += '<div><button type="submit" id="getSomething" >get something</button></div>';
@@ -42,43 +43,57 @@ define( [
 			$element.html(html);  //works only in paint()
 			
 			getAllTargetCodes().then((targetCodes) => {  //get all TargetCodes first. Only then enable button-click and button-change events!
-				//validate targetcode
 				console.log("TargetCodes received in main code! TargetCodes: ");
 				console.log(targetCodes);
+				
+				var targetCodeOK = true;
+				var internalNameOK = true;
+				
+				//validate targetcode
 				$('#targetCode').bind('input propertychange', function() {
 					//if targetCode already in use
 					if($.inArray(this.value.toLowerCase(),  $.map(targetCodes, function(n,i){return n.toLowerCase();}))>-1){  //transform textarea input and targetCodes to lowercase
+						targetCodeOK = false;
 						$('#targetCode').css('color', 'red');
 						$("#createTarget").hide()
-						$("#errorMessage").text(getMessage(layout.props.languageChoice, "targetCodeNotAvailable"));
+						$("#targetCodeError").text(getMessage(layout.props.languageChoice, "targetCodeNotAvailable"));
 					}
 					else if($('#targetCode').val().length > 8){  //targetcode length > 8
+						targetCodeOK = false;
 						$('#targetCode').css('color', 'red');
 						$("#createTarget").hide()
-						$("#errorMessage").text(getMessage(layout.props.languageChoice, "targetCodeTooLong"));
+						$("#targetCodeError").text(getMessage(layout.props.languageChoice, "targetCodeTooLong"));
 					}else if(validateString($('#targetCode').val())==false) {  //targetcode doesn't match regex
+						targetCodeOK = false;
 						$('#targetCode').css('color', 'red');
 						$("#createTarget").hide()
-						$("#errorMessage").text(getMessage(layout.props.languageChoice, "targetCodeNotAlphaNumeric"));
+						$("#targetCodeError").text(getMessage(layout.props.languageChoice, "targetCodeNotAlphaNumeric"));
 					}
 					else{  //targetcode is OK
+						targetCodeOK = true;
 						$('#targetCode').css('color', 'black');
-						$("#createTarget").show()
-						$("#errorMessage").text("");
+						$("#targetCodeError").text("");
+						if(internalNameOK == true){
+							$("#createTarget").show()
+						}
 					}
 				});
 				
 				//validate internalName
 				$('#internalName').bind('input propertychange', function() {
 					if($('#internalName').val().length > 60){  //internalName length > 60
+						internalNameOK = false;
 						$('#internalName').css('color', 'red');
 						$("#createTarget").hide()
-						$("#errorMessage").text(getMessage(layout.props.languageChoice, "internalNameTooLong"));
+						$("#internalNameError").text(getMessage(layout.props.languageChoice, "internalNameTooLong"));
 					}
 					else{  //internalName is OK
+						internalNameOK = true;
 						$('#internalName').css('color', 'black');
-						$("#createTarget").show()
-						$("#errorMessage").text("");
+						$("#internalNameError").text("");
+						if(targetCodeOK == true){
+							$("#createTarget").show();
+						}
 					}
 				});
 				
@@ -197,11 +212,15 @@ define( [
 				});
 				
 			}		
+			/*
+			set expression to ignore %KUNDE selection
+			TODO
 			
+			*/
 			function getAllTargetCodes(){
 				var targetCodes = [];
 				var dim = ["TARGET_CODE"];
-				var fltr = qlik.currApp().createTable(dim, [], {rows:200});
+				var fltr = qlik.currApp().createTable(dim, ["=count({1<[%KUNDE]=,[TARGET_CODE]-={'-'}>}TARGET_CODE)"], {rows:1000});
 
 				return new Promise(resolve => {		
 					fltr.OnData.bind(function () {
@@ -215,7 +234,7 @@ define( [
 					
 				});	
 				
-				/* WORKING CODE (except TypeError issue)
+				/* WORKING CODE (but has a TypeError issue when changing the sheet)
 				var fieldValues = qlik.currApp().field("TARGET_CODE").getData();
 				return new Promise(resolve => {
 					fieldValues.OnData.bind(function () {
@@ -248,7 +267,7 @@ define( [
 							message = "Bitte geben Sie einen Targetcode an.";
 							break;
 						case "buttonText":
-							message = "Target mit Email-Adressen erstellen"
+							message = "Target mit Contact Numbers erstellen"
 							break;
 						case "targetCodeNotAvailable":
 							message = "Targetcode wird bereits verwendet. Bitte wählen Sie einen anderen Targetcode.";
@@ -260,7 +279,7 @@ define( [
 							message = "Targetcode darf aus höchstens 8 Zeichen bestehen.";
 							break;
 						case "targetCodeNotAlphaNumeric":
-							message = "Targetcode darf nur aus Klein- und Großbuchstaben sowie aus Zahlen bestehen.";
+							message = "Targetcode darf nur aus (englischen) Klein- und Großbuchstaben sowie aus Zahlen bestehen.";
 							break;
 						case "internalNameTooLong":
 							message = "Internal name darf aus höchstens 60 Zeichen bestehen.";
@@ -281,7 +300,7 @@ define( [
 							message = "Please enter a targetcode.";
 							break;
 						case "buttonText":
-							message = "create target with email-addresses";
+							message = "create target with contact numbers";
 							break;
 						case "targetCodeNotAvailable":
 							message = "Targetcode is already in use. Please choose another targetcode.";
@@ -293,7 +312,7 @@ define( [
 							message = "Targetcode must not contain more than 8 characters.";
 							break;
 						case "targetCodeNotAlphaNumeric":
-							message = "Targetcode can only contain letters in lower and upper case as well as digits.";
+							message = "Targetcode can only contain (english) letters in lower and upper case as well as digits.";
 							break;
 						case "internalNameTooLong":
 							message = "Internal name must not contain more than 60 characters.";
