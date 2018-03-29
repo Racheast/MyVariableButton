@@ -43,6 +43,8 @@ define( [
 			
 			getAllTargetCodes().then((targetCodes) => {  //get all TargetCodes first. Only then enable button-click and button-change events!
 				//validate targetcode
+				console.log("TargetCodes received in main code! TargetCodes: ");
+				console.log(targetCodes);
 				$('#targetCode').bind('input propertychange', function() {
 					//if targetCode already in use
 					if($.inArray(this.value.toLowerCase(),  $.map(targetCodes, function(n,i){return n.toLowerCase();}))>-1){  //transform textarea input and targetCodes to lowercase
@@ -81,7 +83,7 @@ define( [
 				});
 				
 				$("#createTarget").click(function(){  //button click handling
-					console.log("CLICKED!");
+					console.log("Create Target clicked!");
 					
 					var targetCode = $("#targetCode").val();
 					var internalName = $("#internalName").val();
@@ -96,7 +98,6 @@ define( [
 					}
 					
 					if(errors.length == 0){	
-						console.log("errors.length == 0");
 						//NICE-TO-HAVE: AppObject-picker for dynamically selecting the table (like in SetObjectState)			
 						qlik.currApp().getObject('dzJ').then(function(model){
 							var totalheight = model.layout.qHyperCube.qSize.qcy;  
@@ -196,15 +197,26 @@ define( [
 				});
 				
 			}		
-			/* IMPORTANT !!!!!
-			Problem: TypeError: this.genericObject.close is not a function
-			occurence: after changing sheet in the app
-			solution: https://community.qlik.com/thread/273653
-			*/
+			
 			function getAllTargetCodes(){
-				var fieldValues = qlik.currApp().field("TARGET_CODE").getData();
 				var targetCodes = [];
+				var dim = ["TARGET_CODE"];
+				var fltr = qlik.currApp().createTable(dim, [], {rows:200});
+
+				return new Promise(resolve => {		
+					fltr.OnData.bind(function () {
+						for(var i=0; i < fltr.qHyperCube.qDataPages[0].qMatrix.length; i++){
+							var row = fltr.qHyperCube.qDataPages[0].qMatrix[i];
+							//console.log("qtext: " + row[0].qText);
+							targetCodes.push(row[0].qText);
+						}
+						resolve(targetCodes);
+					});
+					
+				});	
 				
+				/* WORKING CODE (except TypeError issue)
+				var fieldValues = qlik.currApp().field("TARGET_CODE").getData();
 				return new Promise(resolve => {
 					fieldValues.OnData.bind(function () {
 						console.info("waitedForData>>>",fieldValues.rows);
@@ -214,6 +226,7 @@ define( [
 						resolve(targetCodes);
 					});
 				})
+				*/
 			}
 			
 			function validateString(string) {
@@ -256,7 +269,7 @@ define( [
 							message = "Bitte geben Sie einen Internal Name ein.";
 							break;
 						case "noOrTooManyContactNumbers":
-							message = "Ein Campaign Target muss mindestens eine und höchstens 50000 Contact Numbers beinhalten.";
+							message = "Ein Campaign Target muss mindestens 1 und höchstens 50000 Contact Numbers beinhalten.";
 							break;
 					}
 				}else if(languageChoice == "EN"){
@@ -289,7 +302,7 @@ define( [
 							message = "Please enter an internal name.";
 							break;
 						case "noOrTooManyContactNumbers":
-							message = "A campaign target must contain at least one and at most 50000 contact numbers.";
+							message = "A campaign target must contain at least 1 and at most 50000 contact numbers.";
 							break;
 					}
 				}
