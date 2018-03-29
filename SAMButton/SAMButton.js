@@ -137,9 +137,12 @@ define( [
 								for(var i=0; i < pages.length; i++){
 									var page = pages[i];
 									for(var j=0; j < page[0].qLeft.length; j++){
-										var email_address = page[0].qLeft[j].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qText;
-										if(email_address != "-"){
-											contactNumbers.push(email_address);
+										/* get the emailAddres from the pivot table
+										var emailAddress = page[0].qLeft[j].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qSubNodes[0].qText;
+										*/
+										var contactNumber = page[0].qLeft[j].qText;
+										if(contactNumber != "-"){
+											contactNumbers.push(contactNumber);
 										}
 									}
 								}
@@ -149,15 +152,23 @@ define( [
 								if(contactNumbers.length < 1 || contactNumbers.length > 50000){
 									alert(getMessage(layout.props.languageChoice, "noOrTooManyContactNumbers"));
 								}else{
+									
 									var campaignTarget = {
 										"code" : targetCode,
-										"internalName" : targetCode, //TODO: textfield for entering an internal name
+										"internalName" : internalName, 
 										"contactNumbers" : contactNumbers
 									};
+									
+									/*remove this code after testing
+									var campaignTarget = {
+										"code" : "Abc?defghij",
+										"internalName" : "Das ist ein Text.... Das ist ein Text.... Das ist ein Text.... Das ist ein Text.... Das ist ein Text....", //TODO: textfield for entering an internal name
+										"contactNumbers" : []
+									};
+									*/
+									createOrUpdateTarget(campaignTarget);
 								}
-								/* WORKING CODE! Commented out for testing&developing purposes only!
-								createOrUpdateTarget(campaignTarget);
-								*/
+								
 							});
 						});
 					}
@@ -205,18 +216,14 @@ define( [
 							}
 						}
 						if(data.responseJSON.samError != null){
-							errors+=data.responseJSON.samError.statusDetail + "\n";
+							errors+= data.responseJSON.samError.statusCode + ": " + data.responseJSON.samError.statusDetail + "\n";
 						}
-						alert("Error:\n" + errors);
+						alert("Error!\n" + errors);
 					}
 				});
 				
 			}		
-			/*
-			set expression to ignore %KUNDE selection
-			TODO
 			
-			*/
 			function getAllTargetCodes(){
 				var targetCodes = [];
 				var dim = ["TARGET_CODE"];
