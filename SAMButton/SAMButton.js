@@ -194,7 +194,6 @@ define( [
 				
 				$.ajax({
 					url: requestURL,
-					//url: 'http://zwirn:8887/createSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903',
 					type: 'post',
 					data: JSON.stringify(target),
 					headers: {
@@ -207,18 +206,19 @@ define( [
 						alert(getMessage(layout.props.languageChoice,"success"));
 					},
 					error: function(data) {
-						console.log("Data.statustext: " + JSON.stringify(data));
 						//prepare error output message
 						var errors="";
-						if(data.responseJSON.validationErrors != null){
+						if(data.responseJSON != undefined && data.responseJSON.validationErrors != null){
 							for(var i = 0; i < data.responseJSON.validationErrors.length; i++){
 								var validationError = data.responseJSON.validationErrors[i];
 								errors += validationError.field + ": " + validationError.defaultMessage + "\n";
 							}
 						}
-						if(data.responseJSON.samError != null){
+						if(data.responseJSON != undefined && data.responseJSON.samError != null){
 							errors+= data.responseJSON.samError.statusCode + ": " + data.responseJSON.samError.statusDetail + "\n";
 						}
+						console.log("Response data: " + JSON.stringify(data));
+						console.log("Error!\n" + errors);
 						alert("Error!\n" + errors);
 					}
 				});
