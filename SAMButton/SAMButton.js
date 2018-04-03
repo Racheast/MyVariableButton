@@ -102,7 +102,7 @@ define( [
 					
 					var targetCode = $("#targetCode").val();
 					var internalName = $("#internalName").val();
-					var errors = [];
+					var errors = validateProperties();
 					
 					if(targetCode.length == 0){
 						errors.push(getMessage(layout.props.languageChoice, "targetCodeNotSet"));
@@ -184,10 +184,11 @@ define( [
 			});
 			
 			function createOrUpdateTarget(target){
-				var endpointURL = "https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
-				var username =  "CUBE_B2C";
-				var password = "P@ssw0rd";
-				var requestURL = "http://localhost:8080/createOrUpdateTarget?soapEndpointURL=" + endpointURL + "&username=" + username + "&password=" + password;
+				var endpointURL = layout.props.endpointURL; //"https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
+				var username =  layout.props.username;//"CUBE_B2C";
+				var password = layout.props.password;"P@ssw0rd";
+				var samProxyURL = layout.props.samProxyURL;
+				var requestURL = samProxyURL + "/createOrUpdateTarget?soapEndpointURL=" + endpointURL + "&username=" + username + "&password=" + password;
 				
 				console.log("Calling createOrUpdateTarget ...");
 				
@@ -223,6 +224,26 @@ define( [
 				});
 				
 			}		
+			
+			function validateProperties(){
+				var errors = [];
+				if(layout.props.languageChoice == undefined || layout.props.languageChoice.length == 0){
+					errors.push("Property languageChoice is undefined!");
+				}
+				if(layout.props.samProxyURL == undefined || layout.props.samProxyURL.length == 0){
+					errors.push("Property samProxyURL is undefined!");
+				}
+				if(layout.props.endpointURL == undefined || layout.props.endpointURL.length == 0){
+					errors.push("Property endpointURL is undefined!");
+				}
+				if(layout.props.username == undefined || layout.props.username.length == 0){
+					errors.push("Property username is undefined!");
+				}
+				if(layout.props.password == undefined || layout.props.password.length == 0){
+					errors.push("Property password is undefined!");
+				}
+				return errors;
+			}
 			
 			function getAllTargetCodes(){
 				var targetCodes = [];
