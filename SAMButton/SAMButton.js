@@ -352,6 +352,72 @@ define( [
 							message = "A campaign target must contain at least 1 and at most 50000 contact numbers.";
 							break;
 					}
+				}else if(languageChoice == "FR"){
+					switch(type){
+						case "success":
+							message = "La cible a été créée.";
+							break;
+						case "noSegmentName":
+							message = "Indiquez un code cible.";
+							break;
+						case "buttonText":
+							message = "Créer une cible avec des numéros de contact.";
+							break;
+						case "targetCodeNotAvailable":
+							message = "Ce code cible est déjà utilisé. Veuillez choisir un autre code cible.";
+							break;
+						case "targetCodeNotSet":
+							message = "Introduisez le code cible.";
+							break;
+						case "targetCodeTooLong":
+							message = "Le code cible peut contenir 8 charactères au maximum.";
+							break;
+						case "targetCodeNotAlphaNumeric":
+							message = "Le code cible peut contenir seulement des majuscules et minuscules (des lettres anglaises) aussi bien que des numéros.";
+							break;
+						case "internalNameTooLong":
+							message = "Le nom interne peut contenir 60 charactères au maximum.";
+							break;
+						case "internalNameNotSet":
+							message = "Introduisez un nom interne.";
+							break;
+						case "noOrTooManyContactNumbers":
+							message = "Une cible d’une campagne doit contenir entre 1 et 50.000 numéros de contact.";
+							break;
+					}
+				}else if(languageChoice == "ES"){
+					switch(type){
+						case "success":
+							message = "El objetivo se creó.";
+							break;
+						case "noSegmentName":
+							message = "Indique un código de objetivo.";
+							break;
+						case "buttonText":
+							message = "Crear un objetivo con números de contacto."
+							break;
+						case "targetCodeNotAvailable":
+							message = "El Código de objetivo ya está en uso. Escoja otro código de objetivo.";
+							break;
+						case "targetCodeNotSet":
+							message = "Introduzca el código de objetivo.";
+							break;
+						case "targetCodeTooLong":
+							message = "El código de objetivo puede consistir en 8 caracteres como máximo.";
+							break;
+						case "targetCodeNotAlphaNumeric":
+							message = "El código de objetivo puede contener tanto mayúsculos y minúsculos (de letras ingleses) como números.";
+							break;
+						case "internalNameTooLong":
+							message = "El nombre interno puede contener 60 caracteres como máximo.";
+							break;
+						case "internalNameNotSet":
+							message = "Introduzca un nombre interno.";
+							break;
+						case "noOrTooManyContactNumbers":
+							message = "Un objetivo de campaña debe incluir entre 1 y 50 000 números de contacto.";
+							break;
+					}
 				}
 				return message;
 			}
