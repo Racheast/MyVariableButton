@@ -184,11 +184,12 @@ define( [
 			});
 			
 			function createOrUpdateTarget(target){
-				var endpointURL = layout.props.endpointURL; //"https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
-				var username =  layout.props.username;//"CUBE_B2C";
-				var password = layout.props.password;"P@ssw0rd";
+				//var endpointURL = layout.props.endpointURL; //"https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
+				//var username =  layout.props.username;//"CUBE_B2C";
+				//var password = layout.props.password;"P@ssw0rd";
+				var institutionCode = layout.props.institutionCode;
 				var samProxyURL = layout.props.samProxyURL;
-				var requestURL = samProxyURL + "/createOrUpdateTarget?soapEndpointURL=" + endpointURL + "&username=" + username + "&password=" + password;
+				var requestURL = samProxyURL + "/createOrUpdateTarget?institutionCode=" + institutionCode;//?soapEndpointURL=" + endpointURL + "&username=" + username + "&password=" + password;
 				
 				console.log("Calling createOrUpdateTarget ...");
 				

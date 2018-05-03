@@ -14,6 +14,7 @@ define(["qlik"], function(qlik) {
 						   /*
 						   component: "dropdown",
 						   options: function() {
+							   
 							  return[{value: "DE", label: "DE"},{value: "EN", label: "EN"}];
 						   },
 						   */
@@ -31,6 +32,13 @@ define(["qlik"], function(qlik) {
 									expression: "always"
 									//defaultValue: "='http://localhost:8090'"
 								},
+								institutionCode: {
+									label: "Institution Code",
+									type: "string",
+									ref: "props.institutionCode",
+									expression: "always"
+								}
+								/*,
 								endpointURL: {
 									label: "SOAP Endpoint URL",
 									type: "string",
@@ -48,7 +56,7 @@ define(["qlik"], function(qlik) {
 									type: "string",
 									ref: "props.password",
 									expression: "always"
-								}
+								}*/
 							}
 					}
                 }
