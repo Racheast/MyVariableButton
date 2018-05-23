@@ -27,9 +27,9 @@ define( [
 		paint: function ($element, layout) {
 			
 			var html = '<div><input type="text" id="segmentName" placeholder="Segmentname" style="width:40%"></div>';
-			html += '<div><button type="submit" id="addToSegment" style="width:40%">' + getMessage(layout.props.languageChoice, "buttonText") + '</button></div>';
+			html += '<div><button type="submit" id="createSegment" style="width:40%">' + getMessage(layout.props.languageChoice, "buttonText") + '</button></div>';
 			//html += '<div id="dialog" title="Basic dialog"><p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the "x" icon.</p></div>';
-			//html += '<div><button type="submit" id="addUpdateUsers" >Add/update users to a list</button></div>';
+			html += '<div><button type="submit" id="addUpdateUsers" >Add/update users to a list</button></div>';
 			//html += '<div><button type="submit" id="getSomething" >get something</button></div>';
 							
 			
@@ -38,38 +38,11 @@ define( [
 			
 			$element.html(html);  //works only in paint()
 			
-			function getMessage(languageChoice, type){
-				var message = "";
-				if(languageChoice == "DE"){
-					switch(type){
-						case "success":
-							message = "Segment wurde erstellt.";
-							break;
-						case "noSegmentName":
-							message = "Bitte geben Sie einen Segmentnamen an.";
-							break;
-						case "buttonText":
-							message = "Segment mit Email-Adressen erstellen"
-							break;
-					}
-				}else if(languageChoice == "EN"){
-					switch(type){
-						case "success":
-							message = "Segment has been created.";
-							break;
-						case "noSegmentName":
-							message = "Please enter a segment name.";
-							break;
-						case "buttonText":
-							message = "create segment with email-addresses";
-							break;
-					}
-				}
-				return message;
-			}
+			//for test only
+			var list_id="8af007a903";  
 			
-			$("#addToSegment").click(function(){
-				console.log("trying post...");
+			$("#createSegment").click(function(){
+				console.log("createSegment clicked");
 				var segmentName = $("#segmentName").val();
 				
 				if(segmentName.length != 0){	
@@ -119,7 +92,7 @@ define( [
 					alert("Please enter a segment name.");
 				}
 			});
-			/* WORKING CODE: UNUSED ATM 
+			//WORKING CODE: UNUSED ATM 
 			$("#addUpdateUsers").click(function(){
 				//NICE-TO-HAVE: AppObject-picker for dynamically selecting the table (like in SetObjectState)			
 				qlik.currApp().getObject('dzJ').then(function(model){
@@ -194,7 +167,7 @@ define( [
 			function addOrUpdateListMembers(members){
 				console.log("Calling addMembersToList...");
 				$.ajax({
-					url: 'http://localhost:8887/addOrUpdateListMembers?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903',
+					url: layout.props.mailchimpRestProxyURL + '/addOrUpdateListMembers?list_id=' + list_id,
 					type: 'post',
 					data: JSON.stringify(members),
 					headers: {
@@ -207,12 +180,12 @@ define( [
 					}
 				});
 			}
-			*/
+			
 			
 			function createSegment(segment, emailaddresses){
 				console.log("Calling createSegment...");
 				$.ajax({
-					url: 'http://localhost:8887/createSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903',
+					url: layout.props.mailchimpRestProxyURL + '/createSegment?list_id=' + list_id,
 					//url: 'http://zwirn:8887/createSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903',
 					type: 'post',
 					data: JSON.stringify(segment),
@@ -237,12 +210,12 @@ define( [
 					}
 				});
 			};
-			
+						
 			// !!! MAKE SURE THAT THE EMAIL-ADDRESSES BELONG TO USERS THAT EXIST IN MAILCHIMP !!!
-			function addOrRemoveMembersFromSegment(membersToAddAndRemove, segmentID){
+			function addOrRemoveMembersFromSegment(membersToAddAndRemove, segment_id){
 				console.log("Calling addOrRemoveMembersFromSegment...");
 				$.ajax({
-					url: 'http://localhost:8887/addOrRemoveMembersFromSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903&segment_id='+segmentID,
+					url: layout.props.mailchimpRestProxyURL + '/addOrRemoveMembersFromSegment?list_id=' + list_id + '&segment_id=' + segment_id,
 					//url: 'http://zwirn:8887/addOrRemoveMembersFromSegment?vApiPrefix=us13&baseURL=.api.mailchimp.com/3.0/&vMCKey=e0efd872132071dee9ba6c0eb6067e8d&vMCList=8af007a903&segment_id='+segmentID,
 					type: 'post',
 					data: JSON.stringify(membersToAddAndRemove),
@@ -255,6 +228,39 @@ define( [
 						alert(data.total_added + " members have been added to the segment.");
 					}
 				});
+			}
+			
+			function getMessage(languageChoice, type){
+				var message = "";
+				if(languageChoice == ""){
+					console.log("Here");
+					message = "**Please select a language in the extension settings.**";
+				}else if(languageChoice == "DE"){
+					switch(type){
+						case "success":
+							message = "Segment wurde erstellt.";
+							break;
+						case "noSegmentName":
+							message = "Bitte geben Sie einen Segmentnamen an.";
+							break;
+						case "buttonText":
+							message = "Segment mit Email-Adressen erstellen"
+							break;
+					}
+				}else if(languageChoice == "EN"){
+					switch(type){
+						case "success":
+							message = "Segment has been created.";
+							break;
+						case "noSegmentName":
+							message = "Please enter a segment name.";
+							break;
+						case "buttonText":
+							message = "create segment with email-addresses";
+							break;
+					}
+				}
+				return message;
 			}
 		}
 	};
