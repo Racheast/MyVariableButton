@@ -28,6 +28,7 @@ define( [
 			
 			var html = '<div><form><input type="text" id="targetCode" placeholder="Targetcode" style="width:40%;" required/></div>';
 			html += '<div><input type="text" id="internalName" placeholder="Internal name" style="width:40%;" required/></div>';
+			html += '<div><select id="organization" name="organization">' + getOrganizationOptions() + '</select></div>';
 			html += '<div><button type="submit" id="createTarget" style="width:40%">' + getMessage(layout.props.languageChoice, "buttonText") + '</button></div>';
 			html += '<p id="targetCodeError" style="color:red;"></p>';
 			html += '<p id="internalNameError" style="color:red;"></p></form>';
@@ -90,10 +91,11 @@ define( [
 				});
 				
 				$("#createTarget").click(function(){  //button click handling
-					console.log("Create Target clicked!");
+					console.log("createTarget called");
 					
 					var targetCode = $("#targetCode").val();
 					var internalName = $("#internalName").val();
+					var organization = $("#organization").val();
 					var errors = validateProperties();
 					
 					if(targetCode.length == 0){
@@ -105,7 +107,7 @@ define( [
 					}
 					
 					if(errors.length == 0){	
-						createHyperCube(targetCode, internalName);
+						createHyperCube(organization, targetCode, internalName);
 					}
 					else{
 						var errormessage="";
@@ -117,6 +119,14 @@ define( [
 					
 				});
 			});
+			
+			function getOrganizationOptions(){
+				var organizationOptions = "";
+				
+				organizationOptions += "<option>testOrg1</option><option>testOrg2</options>";
+				
+				return organizationOptions;
+			}
 			
 			function createOrUpdateTarget(target){
 				//var endpointURL = layout.props.endpointURL; //"https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
@@ -166,20 +176,6 @@ define( [
 				if(layout.props.languageChoice == undefined || layout.props.languageChoice.length == 0){
 					errors.push("Property languageChoice is undefined!");
 				}
-				/*
-				if(layout.props.samProxyURL == undefined || layout.props.samProxyURL.length == 0){
-					errors.push("Property samProxyURL is undefined!");
-				}
-				if(layout.props.endpointURL == undefined || layout.props.endpointURL.length == 0){
-					errors.push("Property endpointURL is undefined!");
-				}
-				if(layout.props.username == undefined || layout.props.username.length == 0){
-					errors.push("Property username is undefined!");
-				}
-				if(layout.props.password == undefined || layout.props.password.length == 0){
-					errors.push("Property password is undefined!");
-				}
-				*/
 				return errors;
 			}
 			
@@ -351,10 +347,9 @@ define( [
 			function randomInRange(start,end){
 				return Math.floor(Math.random() * (end - start + 1) + start);
 			}
-			function createHyperCube(targetCode, internalName) {
-				console.log("IN createHyperCube()");
-				console.log("targetCode: " + targetCode + ", internalName: " + internalName);
-				// Create the cube
+			function createHyperCube(organization, targetCode, internalName) {
+				console.log("createHyperCube() called for targetCode: " + targetCode + ", internalName: " + internalName);
+				
 				qlik.currApp().createCube({
 					qDimensions : [{
 						qDef : {
@@ -364,18 +359,8 @@ define( [
 						qMeasures : [{
 							
 							qDef : {
-								//qDef : "SAMSSE.CreateTarget(targetCode,internalName," + contactNumber + "," +randomInRange(10,999999)+")"  
-								//qDef : "javaPlugin.post('" + targetCode + "','" + internalName + "',if($(f_Kunden_Anzahl_Ausschluss) > 0, only(CONTACT_NUMBER)))"//," + randomInRange(10,999999) + ")" 
-								//qDef : "javaPlugin.post('" + targetCode + "," + internalName + ",if($(f_Kunden_Anzahl_Ausschluss) > 0, only(CONTACT_NUMBER))')"
-								qDef : "javaPlugin.post('"+targetCode+","+internalName+",'&"+"if($(f_Kunden_Anzahl_Ausschluss) > 0, only(CONTACT_NUMBER)))"
-								//qDef : "javaPlugin.post('MaxMuster')"
+								qDef : "javaPlugin.post('"+organization+","+targetCode+","+internalName+",'&"+"if($(f_Kunden_Anzahl_Ausschluss) > 0, only(CONTACT_NUMBER)))"
 							}							
-							/*
-							qDef : {
-								qDef : "javaPlugin.SumOfRows("+randomInRange(10,999999)+","+12+")"  
-							}
-							*/
-							
 						}],
 						qInitialDataFetch : [{
 							qTop : 0,
@@ -383,21 +368,19 @@ define( [
 							qHeight : 20,
 							qWidth : 3
 						}]
-					}, Cases
+					}, cleanUp
 					)
 
-				// callbacks
-				function Cases (reply) {
-					console.log("function Cases() called!");
-					console.log("reply.qInfo.qId: " + reply.qInfo.qId);
-					console.log("sending destroy() message to engine api...");
-					
-					$.each(reply.qHyperCube.qDataPages[0].qMatrix, function(key, value) {
-						console.log("value[0].qText: " + value[0].qText);
-					});
-					
+				// callback
+				function cleanUp (reply) {
+					console.log("Callback function cleanUp() called.");
+					var responseMessage = reply.qHyperCube.qDataPages[0].qMatrix[0][1].qText;
+					console.log("Response received: " + responseMessage);
+					alert(responseMessage);
+					console.log("Destroying the session object with the qId " + reply.qInfo.qId);
 					qlik.currApp().destroySessionObject(reply.qInfo.qId);	
-				}  //end of Cases()
+				}
+				
 			}  //end of createHyperCube()
 			
 			
