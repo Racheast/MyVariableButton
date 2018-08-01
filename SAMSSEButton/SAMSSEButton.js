@@ -243,6 +243,7 @@ define( [
 							break;
 						case "internalNameNotAlphaNumeric":
 							message = "Internal name darf nur aus (englischen) Klein- und Großbuchstaben sowie aus Zahlen bestehen.";
+							break;
 						case "noOrTooManyContactNumbers":
 							message = "Ein Campaign Target muss mindestens 1 und höchstens 50000 Contact Numbers beinhalten.";
 							break;
@@ -278,6 +279,7 @@ define( [
 							break;
 						case "internalNameNotAlphaNumeric":
 							message = "Internal name can only contain (english) letters in lower and upper case as well as digits.";
+							break;
 						case "noOrTooManyContactNumbers":
 							message = "A campaign target must contain at least 1 and at most 50000 contact numbers.";
 							break;
@@ -313,6 +315,7 @@ define( [
 							break;
 						case "internalNameNotAlphaNumeric":
 							message = "Internal name peut contenir seulement des majuscules et minuscules (des lettres anglaises) aussi bien que des numéros.";
+							break;
 						case "noOrTooManyContactNumbers":
 							message = "Une cible d’une campagne doit contenir entre 1 et 50.000 numéros de contact.";
 							break;
@@ -348,6 +351,7 @@ define( [
 							break;
 						case "internalNameNotAlphaNumeric":
 							message = "El nombre interno puede contener tanto mayúsculos y minúsculos (de letras ingleses) como números.";
+							break;
 						case "noOrTooManyContactNumbers":
 							message = "Un objetivo de campaña debe incluir entre 1 y 50 000 números de contacto.";
 							break;
