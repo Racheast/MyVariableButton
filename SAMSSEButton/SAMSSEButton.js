@@ -79,6 +79,10 @@ define( [
 						$('#internalName').css('color', 'red');
 						$("#createTarget").hide()
 						$("#internalNameError").text(getMessage(layout.props.languageChoice, "internalNameTooLong"));
+					}else if(validateString($('#internalName').val())==false) {
+						$('#internalName').css('color', 'red');
+						$("#createTarget").hide()
+						$("#internalNameError").text(getMessage(layout.props.languageChoice, "internalNameNotAlphaNumeric"));
 					}
 					else{  //internalName is OK
 						internalNameOK = true;
@@ -237,6 +241,8 @@ define( [
 						case "internalNameNotSet":
 							message = "Bitte geben Sie einen Internal Name ein.";
 							break;
+						case "internalNameNotAlphaNumeric":
+							message = "Internal name darf nur aus (englischen) Klein- und Großbuchstaben sowie aus Zahlen bestehen.";
 						case "noOrTooManyContactNumbers":
 							message = "Ein Campaign Target muss mindestens 1 und höchstens 50000 Contact Numbers beinhalten.";
 							break;
@@ -270,6 +276,8 @@ define( [
 						case "internalNameNotSet":
 							message = "Please enter an internal name.";
 							break;
+						case "internalNameNotAlphaNumeric":
+							message = "Internal name can only contain (english) letters in lower and upper case as well as digits.";
 						case "noOrTooManyContactNumbers":
 							message = "A campaign target must contain at least 1 and at most 50000 contact numbers.";
 							break;
@@ -303,6 +311,8 @@ define( [
 						case "internalNameNotSet":
 							message = "Introduisez un nom interne.";
 							break;
+						case "internalNameNotAlphaNumeric":
+							message = "Internal name peut contenir seulement des majuscules et minuscules (des lettres anglaises) aussi bien que des numéros.";
 						case "noOrTooManyContactNumbers":
 							message = "Une cible d’une campagne doit contenir entre 1 et 50.000 numéros de contact.";
 							break;
@@ -336,6 +346,8 @@ define( [
 						case "internalNameNotSet":
 							message = "Introduzca un nombre interno.";
 							break;
+						case "internalNameNotAlphaNumeric":
+							message = "El nombre interno puede contener tanto mayúsculos y minúsculos (de letras ingleses) como números.";
 						case "noOrTooManyContactNumbers":
 							message = "Un objetivo de campaña debe incluir entre 1 y 50 000 números de contacto.";
 							break;
