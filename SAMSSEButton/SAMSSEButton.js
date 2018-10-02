@@ -101,7 +101,7 @@ define( [
 					//var targetCode = $("#targetCode").val();
 					//var internalName = $("#internalName").val();
 					var targetCode = generateTargetCode();
-					var internalName = targetCode;
+					var internalName = generateInternalName();
 					var organization = $("#organization").val();
 					var errors = validateProperties();
 					
@@ -128,22 +128,29 @@ define( [
 				});
 			});
 			
+			//TODO
 			function getOrganizationOptions(){
 				var organizationOptions = "";
-				
 				organizationOptions += "<option>testOrg1</option><option>testOrg2</options>";
-				
 				return organizationOptions;
 			}
 			
 			function generateTargetCode(){
+				var randomString = "";
+				var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+				
+				for (var i = 0; i < 6; i++)
+					randomString += possible.charAt(Math.floor(Math.random() * possible.length));
+				
+				return $("#organization").val().substring(0,2) + randomString;
+			}
+			
+			function generateInternalName(){
 				var today = new Date();
 				var dd = today.getDate();
 				var mm = today.getMonth()+1; //January is 0!
-				
 				var hours = today.getHours();
 				var minutes = today.getMinutes();
-				
 				var yyyy = today.getFullYear();
 				if(dd<10){
 					dd='0'+dd;
@@ -151,10 +158,7 @@ define( [
 				if(mm<10){
 					mm='0'+mm;
 				} 
-				var today = dd+'/'+mm+'/'+yyyy + "_" + hours + ':' + minutes;
-				
-				//return "DataAnaalyTix_" + today;
-				return "fwjsa6";
+				return  "DataAnaalyTix_" + dd + '/' + mm + '/' + yyyy + '_' + hours + ':' + minutes;
 			}
 			
 			function createOrUpdateTarget(target){
