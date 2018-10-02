@@ -26,9 +26,9 @@ define( [
 		},
 		paint: function ($element, layout) {
 			
-			var html = '<div><form><input type="text" id="targetCode" placeholder="Targetcode" style="width:40%;" required/></div>';
-			html += '<div><input type="text" id="internalName" placeholder="Internal name" style="width:40%;" required/></div>';
-			html += '<div><select id="organization" name="organization">' + getOrganizationOptions() + '</select></div>';
+			//var html = '<div><form><input type="text" id="targetCode" placeholder="Targetcode" style="width:40%;" required/></div>';
+			//html += '<div><input type="text" id="internalName" placeholder="Internal name" style="width:40%;" required/></div>';
+			var html = '<div><select id="organization" name="organization" style="width:40%">' + getOrganizationOptions() + '</select></div>';
 			html += '<div><button type="submit" id="createTarget" style="width:40%">' + getMessage(layout.props.languageChoice, "buttonText") + '</button></div>';
 			html += '<p id="targetCodeError" style="color:red;"></p>';
 			html += '<p id="internalNameError" style="color:red;"></p></form>';
@@ -41,7 +41,7 @@ define( [
 				
 				var targetCodeOK = true;
 				var internalNameOK = true;
-				
+				/*
 				//validate targetcode
 				$('#targetCode').bind('input propertychange', function() {
 					//if targetCode already in use
@@ -71,7 +71,8 @@ define( [
 						}
 					}
 				});
-				
+				*/
+				/*
 				//validate internalName
 				$('#internalName').bind('input propertychange', function() {
 					if($('#internalName').val().length > 60){  //internalName length > 60
@@ -93,15 +94,18 @@ define( [
 						}
 					}
 				});
-				
+				*/
 				$("#createTarget").click(function(){  //button click handling
 					console.log("createTarget called");
 					
-					var targetCode = $("#targetCode").val();
-					var internalName = $("#internalName").val();
+					//var targetCode = $("#targetCode").val();
+					//var internalName = $("#internalName").val();
+					var targetCode = generateTargetCode();
+					var internalName = targetCode;
 					var organization = $("#organization").val();
 					var errors = validateProperties();
 					
+					/*
 					if(targetCode.length == 0){
 						errors.push(getMessage(layout.props.languageChoice, "targetCodeNotSet"));
 					}
@@ -109,7 +113,7 @@ define( [
 					if(internalName.length == 0){
 						errors.push(getMessage(layout.props.languageChoice, "internalNameNotSet"));
 					}
-					
+					*/
 					if(errors.length == 0){	
 						createHyperCube(organization, targetCode, internalName);
 					}
@@ -130,6 +134,27 @@ define( [
 				organizationOptions += "<option>testOrg1</option><option>testOrg2</options>";
 				
 				return organizationOptions;
+			}
+			
+			function generateTargetCode(){
+				var today = new Date();
+				var dd = today.getDate();
+				var mm = today.getMonth()+1; //January is 0!
+				
+				var hours = today.getHours();
+				var minutes = today.getMinutes();
+				
+				var yyyy = today.getFullYear();
+				if(dd<10){
+					dd='0'+dd;
+				} 
+				if(mm<10){
+					mm='0'+mm;
+				} 
+				var today = dd+'/'+mm+'/'+yyyy + "_" + hours + ':' + minutes;
+				
+				//return "DataAnaalyTix_" + today;
+				return "fwjsa6";
 			}
 			
 			function createOrUpdateTarget(target){
@@ -221,7 +246,7 @@ define( [
 							message = "Bitte geben Sie einen Targetcode an.";
 							break;
 						case "buttonText":
-							message = "Target mit Contact Numbers erstellen"
+							message = "Target nach SAM exportieren"
 							break;
 						case "targetCodeNotAvailable":
 							message = "Targetcode wird bereits verwendet. Bitte wählen Sie einen anderen Targetcode.";
@@ -247,6 +272,12 @@ define( [
 						case "noOrTooManyContactNumbers":
 							message = "Ein Campaign Target muss mindestens 1 und höchstens 50000 Contact Numbers beinhalten.";
 							break;
+						case "samSuccess":
+							message = "Target wurde erfolgreich erstellt.";
+							break;
+						case "samError":
+							message = "Es gab ein Problem bei der Erstellung des Targets."
+							break;
 					}
 				}else if(languageChoice == "EN"){
 					switch(type){
@@ -257,7 +288,7 @@ define( [
 							message = "Please enter a targetcode.";
 							break;
 						case "buttonText":
-							message = "create target with contact numbers";
+							message = "Export target to SAM";
 							break;
 						case "targetCodeNotAvailable":
 							message = "Targetcode is already in use. Please choose another targetcode.";
@@ -283,6 +314,12 @@ define( [
 						case "noOrTooManyContactNumbers":
 							message = "A campaign target must contain at least 1 and at most 50000 contact numbers.";
 							break;
+						case "samSuccess":
+							message = "Your target was successfully created.";
+							break;
+						case "samError":
+							message = "There was an issue during the target creation."
+							break;
 					}
 				}else if(languageChoice == "FR"){
 					switch(type){
@@ -293,7 +330,7 @@ define( [
 							message = "Indiquez un code cible.";
 							break;
 						case "buttonText":
-							message = "Créer une cible avec des numéros de contact.";
+							message = "Exporter la cible vers SAM";
 							break;
 						case "targetCodeNotAvailable":
 							message = "Ce code cible est déjà utilisé. Veuillez choisir un autre code cible.";
@@ -318,6 +355,12 @@ define( [
 							break;
 						case "noOrTooManyContactNumbers":
 							message = "Une cible d’une campagne doit contenir entre 1 et 50.000 numéros de contact.";
+							break;
+						case "samSuccess":
+							message = "Votre cible a été créée avec succès.";
+							break;
+						case "samError":
+							message = "Votre cible n’a pas pu être créée."
 							break;
 					}
 				}else if(languageChoice == "ES"){
@@ -354,6 +397,12 @@ define( [
 							break;
 						case "noOrTooManyContactNumbers":
 							message = "Un objetivo de campaña debe incluir entre 1 y 50 000 números de contacto.";
+							break;
+						case "samSuccess":
+							message = "Your target was successfully created.";
+							break;
+						case "samError":
+							message = "There was an issue during the target creation."
 							break;
 					}
 				}
@@ -392,7 +441,11 @@ define( [
 					console.log("Callback function cleanUp() called.");
 					var responseMessage = reply.qHyperCube.qDataPages[0].qMatrix[0][1].qText;
 					console.log("Response received: " + responseMessage);
-					alert(responseMessage);
+					if(responseMessage.includes("success")){
+						alert(getMessage(layout.props.languageChoice,"samSuccess"));
+					}else{
+						alert(getMessage(layout.props.languageChoice,"samError"));
+					}
 					console.log("Destroying the session object with the qId " + reply.qInfo.qId);
 					qlik.currApp().destroySessionObject(reply.qInfo.qId);	
 				}
