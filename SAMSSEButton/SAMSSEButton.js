@@ -24,96 +24,29 @@ define( [
 			export: true,
 			exportData : false
 		},
+		
 		paint: function ($element, layout) {
-			
-			//var html = '<div><form><input type="text" id="targetCode" placeholder="Targetcode" style="width:40%;" required/></div>';
-			//html += '<div><input type="text" id="internalName" placeholder="Internal name" style="width:40%;" required/></div>';
-			var html = '<div><select id="organization" name="organization" style="width:40%">' + getOrganizationOptions() + '</select></div>';
+			var html = '<div><select id="organization" name="organization" style="width:40%"></select></div>';
 			html += '<div><button type="submit" id="createTarget" style="width:40%">' + getMessage(layout.props.languageChoice, "buttonText") + '</button></div>';
-			html += '<p id="targetCodeError" style="color:red;"></p>';
-			html += '<p id="internalNameError" style="color:red;"></p></form>';
 			
 			$element.html(html); 
-			
-			getAllTargetCodes().then((targetCodes) => {  //get all TargetCodes first. Only then enable button-click and button-change events!
-				console.log("TargetCodes received in main code! TargetCodes: ");
-				console.log(targetCodes);
+			getOrganizationCodes().then((organizationCodes) => {  //get all organizationCodes first. Only then enable button-click and button-change events!
+				console.log("Organization Codes received:");
+				console.log(organizationCodes);
+				
+				$('#organization').append(getOrganizationOptions(organizationCodes));
 				
 				var targetCodeOK = true;
 				var internalNameOK = true;
-				/*
-				//validate targetcode
-				$('#targetCode').bind('input propertychange', function() {
-					//if targetCode already in use
-					if($.inArray(this.value.toLowerCase(),  $.map(targetCodes, function(n,i){return n.toLowerCase();}))>-1){  //transform textarea input and targetCodes to lowercase
-						targetCodeOK = false;
-						$('#targetCode').css('color', 'red');
-						$("#createTarget").hide()
-						$("#targetCodeError").text(getMessage(layout.props.languageChoice, "targetCodeNotAvailable"));
-					}
-					else if($('#targetCode').val().length > 8){  //targetcode length > 8
-						targetCodeOK = false;
-						$('#targetCode').css('color', 'red');
-						$("#createTarget").hide()
-						$("#targetCodeError").text(getMessage(layout.props.languageChoice, "targetCodeTooLong"));
-					}else if(validateString($('#targetCode').val())==false) {  //targetcode doesn't match regex
-						targetCodeOK = false;
-						$('#targetCode').css('color', 'red');
-						$("#createTarget").hide()
-						$("#targetCodeError").text(getMessage(layout.props.languageChoice, "targetCodeNotAlphaNumeric"));
-					}
-					else{  //targetcode is OK
-						targetCodeOK = true;
-						$('#targetCode').css('color', 'black');
-						$("#targetCodeError").text("");
-						if(internalNameOK == true){
-							$("#createTarget").show()
-						}
-					}
-				});
-				*/
-				/*
-				//validate internalName
-				$('#internalName').bind('input propertychange', function() {
-					if($('#internalName').val().length > 60){  //internalName length > 60
-						internalNameOK = false;
-						$('#internalName').css('color', 'red');
-						$("#createTarget").hide()
-						$("#internalNameError").text(getMessage(layout.props.languageChoice, "internalNameTooLong"));
-					}else if(validateString($('#internalName').val())==false) {
-						$('#internalName').css('color', 'red');
-						$("#createTarget").hide()
-						$("#internalNameError").text(getMessage(layout.props.languageChoice, "internalNameNotAlphaNumeric"));
-					}
-					else{  //internalName is OK
-						internalNameOK = true;
-						$('#internalName').css('color', 'black');
-						$("#internalNameError").text("");
-						if(targetCodeOK == true){
-							$("#createTarget").show();
-						}
-					}
-				});
-				*/
+				
 				$("#createTarget").click(function(){  //button click handling
 					console.log("createTarget called");
-					
-					//var targetCode = $("#targetCode").val();
-					//var internalName = $("#internalName").val();
 					var targetCode = generateTargetCode();
 					var internalName = generateInternalName();
-					var organization = $("#organization").val();
+					var organization = organizationCodes[$("#organization").val()];
+					console.log("organization code: " + organization);
 					var errors = validateProperties();
 					
-					/*
-					if(targetCode.length == 0){
-						errors.push(getMessage(layout.props.languageChoice, "targetCodeNotSet"));
-					}
-					
-					if(internalName.length == 0){
-						errors.push(getMessage(layout.props.languageChoice, "internalNameNotSet"));
-					}
-					*/
 					if(errors.length == 0){	
 						createHyperCube(organization, targetCode, internalName);
 					}
@@ -128,10 +61,14 @@ define( [
 				});
 			});
 			
-			//TODO
-			function getOrganizationOptions(){
+			function getOrganizationOptions(organizationCodes){
+				console.log("getOrganizationOptions(..) called! ");
 				var organizationOptions = "";
-				organizationOptions += "<option>testOrg1</option><option>testOrg2</options>";
+				
+				for(var i=0; i < Object.keys(organizationCodes).length; i++){
+					organizationOptions += "<option>" + Object.keys(organizationCodes)[i] + "</option>";
+				}
+				
 				return organizationOptions;
 			}
 			
@@ -161,49 +98,6 @@ define( [
 				return  "DataAnaalyTix_" + dd + '/' + mm + '/' + yyyy + '_' + hours + ':' + minutes;
 			}
 			
-			function createOrUpdateTarget(target){
-				//var endpointURL = layout.props.endpointURL; //"https://cube.ws.secutix.com/tnco/external-remoting/com.secutix.service.campaign.v1_0.ExternalCampaignService.webservice?wsdl";
-				//var username =  layout.props.username;//"CUBE_B2C";
-				//var password = layout.props.password;"P@ssw0rd";
-				var institutionCode = layout.props.institutionCode;
-				var samProxyURL = layout.props.samProxyURL;
-				var requestURL = samProxyURL + "/createOrUpdateTarget?institutionCode=" + institutionCode;//?soapEndpointURL=" + endpointURL + "&username=" + username + "&password=" + password;
-				
-				console.log("Calling createOrUpdateTarget ...");
-				
-				$.ajax({
-					url: requestURL,
-					type: 'post',
-					data: JSON.stringify(target),
-					headers: {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json'
-					},
-					dataType: 'json',
-					success: function(data) {
-						console.log("createOrUpdateTarget: SUCCESS: data: " + JSON.stringify(data));
-						alert(getMessage(layout.props.languageChoice,"success"));
-					},
-					error: function(data) {
-						//prepare error output message
-						var errors="";
-						if(data.responseJSON != undefined && data.responseJSON.validationErrors != null){
-							for(var i = 0; i < data.responseJSON.validationErrors.length; i++){
-								var validationError = data.responseJSON.validationErrors[i];
-								errors += validationError.field + ": " + validationError.defaultMessage + "\n";
-							}
-						}
-						if(data.responseJSON != undefined && data.responseJSON.samError != null){
-							errors+= data.responseJSON.samError.statusCode + ": " + data.responseJSON.samError.statusDetail + "\n";
-						}
-						console.log("Response data: " + JSON.stringify(data));
-						console.log("Error!\n" + errors);
-						alert("Error!\n" + errors);
-					}
-				});
-				
-			}		
-			
 			function validateProperties(){
 				var errors = [];
 				if(layout.props.languageChoice == undefined || layout.props.languageChoice.length == 0){
@@ -211,23 +105,21 @@ define( [
 				}
 				return errors;
 			}
-			
-			function getAllTargetCodes(){
-				var targetCodes = [];
-				var dim = ["TARGET_CODE"];
-				var fltr = qlik.currApp().createTable(dim, ["=count({1<[%KUNDE]=,[TARGET_CODE]-={'-'}>}TARGET_CODE)"], {rows:1000});
-
-				return new Promise(resolve => {		
+		
+			function getOrganizationCodes(){
+				var organizationCodes = {};
+				var dim = ["%ORGANIZATION", "Organization_Name"];
+				var fltr = qlik.currApp().createTable(dim, {rows:1000});
+				
+				return new Promise(resolve => {
 					fltr.OnData.bind(function () {
 						for(var i=0; i < fltr.qHyperCube.qDataPages[0].qMatrix.length; i++){
 							var row = fltr.qHyperCube.qDataPages[0].qMatrix[i];
-							//console.log("qtext: " + row[0].qText);
-							targetCodes.push(row[0].qText);
+							organizationCodes[row[1].qText] = row[0].qText;
 						}
-						resolve(targetCodes);
+						resolve(organizationCodes);
 					});
-					
-				});	
+				});
 				
 			}
 			
@@ -235,6 +127,46 @@ define( [
 				var pattern = /^[A-Za-z0-9]*$/;
 				return $.trim(string).match(pattern) ? true : false;
 			}
+			
+			function createHyperCube(organization, targetCode, internalName) {
+				console.log("createHyperCube() called for targetCode: " + targetCode + ", internalName: " + internalName);
+				
+				qlik.currApp().createCube({
+					qDimensions : [{
+						qDef : {
+							qFieldDefs : ["CONTACT_NUMBER"]
+						}
+						}],
+						qMeasures : [{
+							
+							qDef : {
+								qDef : "javaPlugin.post('"+organization+","+targetCode+","+internalName+",'&"+"if($(f_Kunden_Anzahl_Ausschluss) > 0, only(CONTACT_NUMBER)))"
+							}							
+						}],
+						qInitialDataFetch : [{
+							qTop : 0,
+							qLeft : 0,
+							qHeight : 20,
+							qWidth : 3
+						}]
+					}, cleanUp
+					)
+
+				// callback
+				function cleanUp (reply) {
+					console.log("Callback function cleanUp() called.");
+					var responseMessage = reply.qHyperCube.qDataPages[0].qMatrix[0][1].qText;
+					console.log("Response received: " + responseMessage);
+					if(responseMessage.includes("success")){
+						alert(getMessage(layout.props.languageChoice,"samSuccess"));
+					}else{
+						alert(getMessage(layout.props.languageChoice,"samError"));
+					}
+					console.log("Destroying the session object with the qId " + reply.qInfo.qId);
+					qlik.currApp().destroySessionObject(reply.qInfo.qId);	
+				}
+				
+			}  //end of createHyperCube()
 			
 			function getMessage(languageChoice, type){  //for translation purposes
 				var message = "";
@@ -412,51 +344,6 @@ define( [
 				}
 				return message;
 			}
-			
-			function randomInRange(start,end){
-				return Math.floor(Math.random() * (end - start + 1) + start);
-			}
-			function createHyperCube(organization, targetCode, internalName) {
-				console.log("createHyperCube() called for targetCode: " + targetCode + ", internalName: " + internalName);
-				
-				qlik.currApp().createCube({
-					qDimensions : [{
-						qDef : {
-							qFieldDefs : ["CONTACT_NUMBER"]
-						}
-						}],
-						qMeasures : [{
-							
-							qDef : {
-								qDef : "javaPlugin.post('"+organization+","+targetCode+","+internalName+",'&"+"if($(f_Kunden_Anzahl_Ausschluss) > 0, only(CONTACT_NUMBER)))"
-							}							
-						}],
-						qInitialDataFetch : [{
-							qTop : 0,
-							qLeft : 0,
-							qHeight : 20,
-							qWidth : 3
-						}]
-					}, cleanUp
-					)
-
-				// callback
-				function cleanUp (reply) {
-					console.log("Callback function cleanUp() called.");
-					var responseMessage = reply.qHyperCube.qDataPages[0].qMatrix[0][1].qText;
-					console.log("Response received: " + responseMessage);
-					if(responseMessage.includes("success")){
-						alert(getMessage(layout.props.languageChoice,"samSuccess"));
-					}else{
-						alert(getMessage(layout.props.languageChoice,"samError"));
-					}
-					console.log("Destroying the session object with the qId " + reply.qInfo.qId);
-					qlik.currApp().destroySessionObject(reply.qInfo.qId);	
-				}
-				
-			}  //end of createHyperCube()
-			
-			
 				
 		}
 	
