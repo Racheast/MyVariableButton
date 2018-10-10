@@ -95,7 +95,7 @@ define( [
 				if(mm<10){
 					mm='0'+mm;
 				} 
-				return  "DataAnaalyTix_" + dd + '/' + mm + '/' + yyyy + '_' + hours + ':' + minutes;
+				return  "DataAnalyTix_" + dd + '/' + mm + '/' + yyyy + '_' + hours + ':' + minutes;
 			}
 			
 			function validateProperties(){
