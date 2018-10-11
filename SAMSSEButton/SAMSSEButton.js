@@ -94,7 +94,13 @@ define( [
 				} 
 				if(mm<10){
 					mm='0'+mm;
-				} 
+				}
+				if(hours<10){
+					hours='0'+hours;
+				}
+				if(minutes<10){
+					minutes='0'+minutes;
+				}
 				return  "DataAnalyTix_" + dd + '/' + mm + '/' + yyyy + '_' + hours + ':' + minutes;
 			}
 			
